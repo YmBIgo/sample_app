@@ -1,5 +1,7 @@
 class SessionsController < ApplicationController
 
+  before_action :need_page,      only: [:new, :create]
+
   def new
   end
 
@@ -17,6 +19,14 @@ class SessionsController < ApplicationController
   def destroy
     sign_out
     redirect_to root_url
+  end
+
+  private
+  def need_page
+    unless current_user?(@user)
+      redirect_to(root_path)
+      flash[:error] = 'You\'ve signed in'
+    end
   end
 
 end

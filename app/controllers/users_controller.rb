@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:index, :edit, :update]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy
+  before_action :need_page,      only: [:new, :create]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -71,6 +72,13 @@ class UsersController < ApplicationController
 
   def admin_user
     redirect_to(root_path) unless current_user.admin?
+  end
+
+  def need_page
+    unless current_user?(@user)
+      redirect_to(root_path)
+      flash[:error] = 'You\'ve signed up'
+    end
   end
 
 end
